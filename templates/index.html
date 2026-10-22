@@ -1,0 +1,887 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Deckoviz AI | Creative Studio</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+    <style>
+        :root {
+            color-scheme: light;
+            --page: #f5f3ff;
+            --surface: #ffffff;
+            --surface-soft: #faf9ff;
+            --input: #f5f3ff;
+            --text: #211b38;
+            --muted: #77718c;
+            --border: #e8e2f5;
+            --primary: #7653e8;
+            --primary-hover: #6240d0;
+            --primary-soft: #eee8ff;
+            --shadow: 0 24px 70px rgba(77, 54, 140, .10);
+            --radius: 24px;
+        }
+
+        [data-theme="dark"] {
+            color-scheme: dark;
+            --page: #100e1b;
+            --surface: #1b1829;
+            --surface-soft: #211d32;
+            --input: #28233b;
+            --text: #f5f2ff;
+            --muted: #b4accb;
+            --border: #39314f;
+            --primary: #a58bff;
+            --primary-hover: #b8a4ff;
+            --primary-soft: #332750;
+            --shadow: 0 24px 70px rgba(0, 0, 0, .24);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            min-height: 100vh;
+            padding: 28px 20px 45px;
+            font-family: "Plus Jakarta Sans", sans-serif;
+            background:
+                radial-gradient(ellipse at 5% 0%, rgba(186, 165, 255, .24), transparent 36%),
+                radial-gradient(ellipse at 100% 100%, rgba(213, 195, 255, .25), transparent 35%),
+                var(--page);
+            color: var(--text);
+            transition: background .3s, color .3s;
+        }
+
+        button, input {
+            font: inherit;
+        }
+
+        button {
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        .app {
+            max-width: 1100px;
+            margin: 0 auto;
+        }
+
+        /* Top navigation */
+
+        .topbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 16px;
+            margin-bottom: 34px;
+        }
+
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .brand-logo {
+            display: grid;
+            place-items: center;
+            width: 44px;
+            height: 44px;
+            color: white;
+            font-size: 23px;
+            border-radius: 15px;
+            background: linear-gradient(135deg, #9b7bff, #6945db);
+            box-shadow: 0 7px 20px rgba(118, 83, 232, .25);
+        }
+
+        .brand-name {
+            font-size: 17px;
+            font-weight: 800;
+            letter-spacing: -.5px;
+        }
+
+        .brand-caption {
+            margin-top: 3px;
+            font-size: 11px;
+            color: var(--muted);
+        }
+
+        .theme-toggle {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 10px 15px;
+            border: 1px solid var(--border);
+            border-radius: 14px;
+            background: var(--surface);
+            color: var(--text);
+            font-size: 12px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: .2s;
+        }
+
+        .theme-toggle:hover {
+            border-color: var(--primary);
+            transform: translateY(-1px);
+        }
+
+        /* Main heading */
+
+        .hero {
+            text-align: center;
+            margin: 0 auto 34px;
+            max-width: 720px;
+        }
+
+        .eyebrow {
+            display: inline-flex;
+            align-items: center;
+            gap: 7px;
+            padding: 8px 13px;
+            border: 1px solid var(--border);
+            border-radius: 100px;
+            background: var(--surface);
+            color: var(--primary);
+            font-size: 11px;
+            font-weight: 800;
+            letter-spacing: .5px;
+            margin-bottom: 20px;
+        }
+
+        .status-dot {
+            width: 7px;
+            height: 7px;
+            background: #26bd86;
+            border-radius: 50%;
+            box-shadow: 0 0 0 4px rgba(38, 189, 134, .12);
+        }
+
+        h1 {
+            font-size: clamp(32px, 5vw, 51px);
+            line-height: 1.15;
+            letter-spacing: -2px;
+            font-weight: 800;
+            margin-bottom: 17px;
+        }
+
+        .gradient-text {
+            color: var(--primary);
+        }
+
+        .hero-description {
+            max-width: 570px;
+            margin: 0 auto;
+            font-size: 14px;
+            line-height: 1.9;
+            color: var(--muted);
+        }
+
+        /* Main generator card */
+
+        .studio {
+            max-width: 850px;
+            margin: 0 auto;
+            padding: 30px;
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            background: var(--surface);
+            box-shadow: var(--shadow);
+        }
+
+        .section-heading {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 16px;
+        }
+
+        .section-heading h2 {
+            font-size: 15px;
+            font-weight: 800;
+        }
+
+        .optional-label {
+            font-size: 11px;
+            color: var(--muted);
+        }
+
+        .prompt-box {
+            padding: 5px;
+            border: 1.5px solid var(--border);
+            border-radius: 17px;
+            background: var(--input);
+            transition: border-color .2s, box-shadow .2s;
+        }
+
+        .prompt-box:focus-within {
+            border-color: var(--primary);
+            box-shadow: 0 0 0 4px rgba(118, 83, 232, .10);
+        }
+
+        .prompt-box input {
+            display: block;
+            width: 100%;
+            padding: 16px 15px;
+            border: 0;
+            outline: 0;
+            background: transparent;
+            color: var(--text);
+            font-size: 14px;
+        }
+
+        .prompt-box input::placeholder {
+            color: var(--muted);
+            opacity: .85;
+        }
+
+        .prompt-actions {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 12px;
+            padding: 5px 5px 5px 12px;
+        }
+
+        .prompt-hint {
+            color: var(--muted);
+            font-size: 11px;
+        }
+
+        .generate-btn {
+            display: inline-flex;
+            justify-content: center;
+            align-items: center;
+            gap: 9px;
+            min-height: 46px;
+            padding: 0 23px;
+            border: none;
+            border-radius: 12px;
+            background: linear-gradient(135deg, #9474ff, #704ce0);
+            color: white;
+            font-size: 13px;
+            font-weight: 800;
+            cursor: pointer;
+            box-shadow: 0 6px 17px rgba(118, 83, 232, .22);
+            transition: transform .2s, box-shadow .2s;
+        }
+
+        .generate-btn:hover:not(:disabled) {
+            transform: translateY(-2px);
+            box-shadow: 0 9px 23px rgba(118, 83, 232, .32);
+        }
+
+        .generate-btn:disabled {
+            cursor: wait;
+            opacity: .7;
+        }
+
+        .examples {
+            display: flex;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 9px;
+            margin-top: 20px;
+        }
+
+        .examples-label {
+            margin-right: 3px;
+            font-size: 11px;
+            font-weight: 700;
+            color: var(--muted);
+        }
+
+        .example-chip {
+            padding: 8px 11px;
+            border: 1px solid var(--border);
+            border-radius: 100px;
+            background: var(--surface);
+            color: var(--text);
+            font-size: 11px;
+            cursor: pointer;
+            transition: .2s;
+        }
+
+        .example-chip:hover {
+            color: var(--primary);
+            background: var(--primary-soft);
+            border-color: var(--primary);
+        }
+
+        /* Loading state */
+
+        .loading {
+            display: none;
+            text-align: center;
+            padding: 48px 15px;
+        }
+
+        .loading.active {
+            display: block;
+        }
+
+        .loader {
+            width: 48px;
+            height: 48px;
+            margin: 0 auto 20px;
+            border: 4px solid var(--primary-soft);
+            border-top-color: var(--primary);
+            border-radius: 50%;
+            animation: spin .8s linear infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        .loading h3 {
+            font-size: 16px;
+            margin-bottom: 8px;
+        }
+
+        .loading p {
+            font-size: 12px;
+            color: var(--muted);
+            line-height: 1.8;
+        }
+
+        /* Results */
+
+        .result {
+            display: none;
+            margin-top: 30px;
+            border: 1px solid var(--border);
+            border-radius: 20px;
+            overflow: hidden;
+            background: var(--surface-soft);
+            animation: appear .4s ease both;
+        }
+
+        .result.active {
+            display: block;
+        }
+
+        @keyframes appear {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .result-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 12px;
+            padding: 19px 22px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .result-title {
+            font-size: 15px;
+            font-weight: 800;
+        }
+
+        .result-subtitle {
+            margin-top: 5px;
+            color: var(--muted);
+            font-size: 11px;
+        }
+
+        .result-badge {
+            padding: 7px 11px;
+            border-radius: 100px;
+            background: var(--primary-soft);
+            color: var(--primary);
+            font-size: 10px;
+            font-weight: 800;
+        }
+
+        .artwork-wrap {
+            position: relative;
+            display: grid;
+            place-items: center;
+            min-height: 240px;
+            background: var(--input);
+            overflow: hidden;
+        }
+
+        .artwork {
+            display: block;
+            width: 100%;
+            max-height: 600px;
+            object-fit: contain;
+        }
+
+        .artwork:focus-visible,
+        button:focus-visible {
+            outline: 3px solid var(--primary);
+            outline-offset: 3px;
+        }
+
+        .result-content {
+            padding: 24px;
+        }
+
+        .content-label {
+            display: flex;
+            align-items: center;
+            gap: 9px;
+            margin-bottom: 15px;
+            font-size: 12px;
+            font-weight: 800;
+        }
+
+        .label-icon {
+            display: grid;
+            place-items: center;
+            width: 30px;
+            height: 30px;
+            border-radius: 10px;
+            background: var(--primary-soft);
+            font-size: 15px;
+        }
+
+        .narration {
+            padding: 20px;
+            border: 1px solid var(--border);
+            border-radius: 14px;
+            background: var(--surface);
+            color: var(--text);
+            font-size: 13px;
+            line-height: 1.95;
+            white-space: pre-wrap;
+            overflow-wrap: anywhere;
+        }
+
+        .audio-section {
+            margin-top: 23px;
+        }
+
+        .audio-player {
+            display: block;
+            width: 100%;
+            height: 48px;
+            margin-top: 12px;
+            border-radius: 10px;
+        }
+
+        .error-message {
+            display: none;
+            margin-top: 18px;
+            padding: 14px 16px;
+            border: 1px solid #f3b4b4;
+            border-radius: 12px;
+            background: #fff1f1;
+            color: #a62b2b;
+            font-size: 12px;
+            line-height: 1.7;
+        }
+
+        [data-theme="dark"] .error-message {
+            background: #381e29;
+            color: #ffb8c3;
+            border-color: #6a3546;
+        }
+
+        .footer {
+            margin-top: 28px;
+            text-align: center;
+            color: var(--muted);
+            font-size: 11px;
+            line-height: 1.8;
+        }
+
+        @media (max-width: 600px) {
+            body {
+                padding: 18px 13px 30px;
+            }
+
+            .topbar {
+                margin-bottom: 37px;
+            }
+
+            .brand-logo {
+                width: 39px;
+                height: 39px;
+            }
+
+            .brand-name {
+                font-size: 15px;
+            }
+
+            .theme-toggle {
+                padding: 9px 11px;
+                font-size: 11px;
+            }
+
+            h1 {
+                letter-spacing: -1.3px;
+            }
+
+            .hero-description {
+                font-size: 13px;
+            }
+
+            .studio {
+                padding: 19px 15px;
+                border-radius: 19px;
+            }
+
+            .prompt-actions {
+                align-items: stretch;
+                flex-direction: column;
+                padding: 8px;
+            }
+
+            .prompt-hint {
+                padding: 4px 3px;
+            }
+
+            .generate-btn {
+                width: 100%;
+            }
+
+            .examples {
+                gap: 8px;
+            }
+
+            .result-content {
+                padding: 17px;
+            }
+
+            .result-header {
+                padding: 16px;
+            }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            *, *::before, *::after {
+                animation-duration: .01ms !important;
+                transition-duration: .01ms !important;
+            }
+        }
+    </style>
+</head>
+
+<body>
+<div class="app">
+
+    <header class="topbar">
+        <div class="brand">
+            <div class="brand-logo">✦</div>
+            <div>
+                <div class="brand-name">Deckoviz AI</div>
+                <div class="brand-caption">Your creative AI studio</div>
+            </div>
+        </div>
+
+        <button class="theme-toggle" id="themeToggle" type="button"
+                aria-label="Switch color theme">
+            <span id="themeIcon">☾</span>
+            <span id="themeLabel">Dark mode</span>
+        </button>
+    </header>
+
+    <main>
+        <section class="hero">
+            <div class="eyebrow">
+                <span class="status-dot"></span>
+                AI-POWERED CREATIVE STUDIO
+            </div>
+
+            <h1>
+                Imagine it.<br>
+                <span class="gradient-text">Bring it to life.</span>
+            </h1>
+
+            <p class="hero-description">
+                Turn your imagination into stunning artwork with AI-generated
+                visuals and immersive voice narration. One idea, a whole new experience.
+            </p>
+        </section>
+
+        <section class="studio">
+            <div class="section-heading">
+                <h2>✨ Describe your imagination</h2>
+                <span class="optional-label">Be as creative as you like</span>
+            </div>
+
+            <form id="generatorForm">
+                <div class="prompt-box">
+                    <input
+                        type="text"
+                        id="topicInput"
+                        name="topic"
+                        maxlength="1000"
+                        placeholder="Describe the world you want to create..."
+                        aria-label="Describe your artwork"
+                        autocomplete="off"
+                        required
+                    >
+
+                    <div class="prompt-actions">
+                        <span class="prompt-hint">✦ Your imagination is the limit</span>
+
+                        <button type="submit" id="generateBtn" class="generate-btn">
+                            <span id="buttonText">Generate artwork</span>
+                            <span aria-hidden="true">✦</span>
+                        </button>
+                    </div>
+                </div>
+            </form>
+
+            <div class="examples">
+                <span class="examples-label">Try an idea:</span>
+                <button type="button" class="example-chip"
+                    data-prompt="A magical purple galaxy with glowing stars">
+                    🌌 Cosmic galaxy
+                </button>
+                <button type="button" class="example-chip"
+                    data-prompt="A peaceful Japanese garden during cherry blossom season">
+                    🌸 Dream garden
+                </button>
+                <button type="button" class="example-chip"
+                    data-prompt="A futuristic city floating among the clouds at sunset">
+                    🏙️ Future city
+                </button>
+            </div>
+
+            <div class="error-message" id="errorMessage"
+                 role="alert" aria-live="polite"></div>
+
+            <div class="loading" id="loading" role="status" aria-live="polite">
+                <div class="loader"></div>
+                <h3>Creating something extraordinary...</h3>
+                <p>
+                    Your artwork is taking shape.<br>
+                    Preparing your story and voice narration too.
+                </p>
+            </div>
+
+            <section class="result" id="experienceCard"
+                     aria-label="Generated art experience" aria-live="polite">
+
+                <div class="result-header">
+                    <div>
+                        <div class="result-title">Your creation</div>
+                        <div class="result-subtitle">
+                            Artwork and narration, made from your idea
+                        </div>
+                    </div>
+                    <span class="result-badge">✦ AI GENERATED</span>
+                </div>
+
+                <div class="artwork-wrap">
+                    <img
+                        id="artImage"
+                        class="artwork"
+                        src=""
+                        alt="Your AI-generated artwork"
+                        hidden
+                    >
+                </div>
+
+                <div class="result-content">
+                    <div class="content-label">
+                        <span class="label-icon">📖</span>
+                        Your story
+                    </div>
+
+                    <div class="narration" id="narrationText"></div>
+
+                    <div class="audio-section">
+                        <div class="content-label">
+                            <span class="label-icon">🎧</span>
+                            Listen to your experience
+                        </div>
+
+                        <audio
+                            id="audioPlayer"
+                            class="audio-player"
+                            controls
+                            preload="none"
+                        >
+                            Your browser does not support audio playback.
+                        </audio>
+                    </div>
+                </div>
+            </section>
+        </section>
+    </main>
+
+    <footer class="footer">
+        <p>Made for curious minds and creative imaginations.</p>
+        <p>Powered by Deckoviz AI</p>
+    </footer>
+
+</div>
+
+<script>
+    const root = document.documentElement;
+    const themeToggle = document.getElementById("themeToggle");
+    const themeIcon = document.getElementById("themeIcon");
+    const themeLabel = document.getElementById("themeLabel");
+
+    const form = document.getElementById("generatorForm");
+    const topicInput = document.getElementById("topicInput");
+    const generateBtn = document.getElementById("generateBtn");
+    const buttonText = document.getElementById("buttonText");
+    const loading = document.getElementById("loading");
+    const card = document.getElementById("experienceCard");
+    const errorMessage = document.getElementById("errorMessage");
+    const artImage = document.getElementById("artImage");
+    const narrationText = document.getElementById("narrationText");
+    const audioPlayer = document.getElementById("audioPlayer");
+
+    // Theme toggle
+    themeToggle.addEventListener("click", () => {
+        const isDark = root.getAttribute("data-theme") !== "dark";
+
+        if (isDark) {
+            root.setAttribute("data-theme", "dark");
+        } else {
+            root.removeAttribute("data-theme");
+        }
+
+        themeIcon.textContent = isDark ? "☀" : "☾";
+        themeLabel.textContent = isDark ? "Light mode" : "Dark mode";
+    });
+
+    // Example prompts
+    document.querySelectorAll(".example-chip").forEach((chip) => {
+        chip.addEventListener("click", () => {
+            topicInput.value = chip.dataset.prompt;
+            topicInput.focus();
+        });
+    });
+
+    function showError(message) {
+        errorMessage.textContent = message;
+        errorMessage.style.display = "block";
+    }
+
+    function resetMedia() {
+        audioPlayer.pause();
+        audioPlayer.removeAttribute("src");
+        audioPlayer.load();
+
+        artImage.removeAttribute("src");
+        artImage.hidden = true;
+        artImage.alt = "Your AI-generated artwork";
+    }
+
+    function setLoading(isLoading) {
+        generateBtn.disabled = isLoading;
+        topicInput.disabled = isLoading;
+        buttonText.textContent = isLoading
+            ? "Creating your art..."
+            : "Generate artwork";
+
+        loading.classList.toggle("active", isLoading);
+        generateBtn.setAttribute("aria-busy", String(isLoading));
+    }
+
+    // Generate artwork and narration using the existing backend
+    async function generateArt() {
+        const topic = topicInput.value.trim();
+
+        if (!topic) {
+            topicInput.focus();
+            showError("Please describe an idea before generating your artwork.");
+            return;
+        }
+
+        errorMessage.style.display = "none";
+        card.classList.remove("active");
+        resetMedia();
+        narrationText.textContent = "";
+
+        setLoading(true);
+
+        try {
+            const response = await fetch("/generate-experience", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({ topic })
+            });
+
+            let data;
+
+            try {
+                data = await response.json();
+            } catch {
+                throw new Error("The server returned an invalid response. Please try again.");
+            }
+
+            if (!response.ok) {
+                throw new Error(
+                    data?.error || `The server returned error ${response.status}.`
+                );
+            }
+
+            if (!data.success) {
+                throw new Error(data.error || "Unable to generate your experience.");
+            }
+
+            if (!data.image_url || !data.audio_url || !data.narration) {
+                throw new Error(
+                    "The response is missing artwork, narration, or audio. Please check your backend."
+                );
+            }
+
+            // Set the generated artwork
+            artImage.src = data.image_url;
+            artImage.alt = `AI-generated artwork for: ${topic}`;
+            artImage.hidden = false;
+
+            // Keep narration as text for safe rendering
+            narrationText.textContent = data.narration;
+
+            // Set the generated audio
+            audioPlayer.src = data.audio_url;
+            audioPlayer.load();
+
+            card.classList.add("active");
+
+            // Move the result into view
+            card.scrollIntoView({
+                behavior: window.matchMedia("(prefers-reduced-motion: reduce)").matches
+                    ? "auto"
+                    : "smooth",
+                block: "start"
+            });
+
+            // Browsers may block autoplay; the user can press Play
+            audioPlayer.play().catch(() => {
+                // Manual playback remains available through the audio controls.
+            });
+
+        } catch (error) {
+            console.error("Generation error:", error);
+
+            showError(
+                error.message ||
+                "Unable to connect to the server. Please check your connection and try again."
+            );
+        } finally {
+            setLoading(false);
+        }
+    }
+
+    form.addEventListener("submit", (event) => {
+        event.preventDefault();
+        generateArt();
+    });
+</script>
+
+</body>
+</html>
