@@ -126,12 +126,6 @@ narrated-art-experience/
 
 ---
 
-## 📄 License
-
-Add your preferred open-source license here, such as the MIT License, if applicable.
-
----
-
 <p align="center">
   <b>✨ Turning imagination into stories, art, and sound. ✨</b>
 </p>
